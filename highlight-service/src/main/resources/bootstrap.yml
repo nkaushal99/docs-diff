@@ -1,0 +1,14 @@
+spring:
+  application.name: highlight-service
+  cloud:
+    config:
+      uri: http://localhost:8888
+      fail-fast: true
+    bus:
+      env.enabled: true
+      refresh.enabled: true
+  kafka.bootstrap-servers: localhost:9092
+
+management.endpoints:
+  web.exposure.include: bus-refresh, health, info
+  enabled-by-default: true
