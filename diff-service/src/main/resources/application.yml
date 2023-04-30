@@ -1,0 +1,16 @@
+server.port: ${PORT:9010}
+
+spring:
+  application.name: diff-service
+
+eureka:
+  client:
+#    registry-fetch-interval-seconds: 3
+    disable-delta: true
+    service-url:
+      default-zone: ${EUREKA_URL:http://localhost:8761/eureka/}
+
+  instance:
+    instance-id: ${spring.application.name}
+#    lease-renewal-interval-in-seconds: 1
+#    lease-expiration-duration-in-seconds: 2
