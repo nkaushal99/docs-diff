@@ -1,9 +1,18 @@
 package com.nikhil.service.document.client;
 
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serial;
 import java.io.Serializable;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class OldNewFiles implements Serializable {
 
   @Serial
@@ -13,26 +22,4 @@ public class OldNewFiles implements Serializable {
 
   private MultipartFileImpl newFile;
 
-  public OldNewFiles(){}
-
-  public OldNewFiles(MultipartFileImpl oldFile, MultipartFileImpl newFile){
-    this.oldFile = oldFile;
-    this.newFile = newFile;
-  }
-
-  public MultipartFileImpl getOldFile() {
-    return oldFile;
-  }
-
-  public void setOldFile(MultipartFileImpl oldFile) {
-    this.oldFile = oldFile;
-  }
-
-  public MultipartFileImpl getNewFile() {
-    return newFile;
-  }
-
-  public void setNewFile(MultipartFileImpl newFile) {
-    this.newFile = newFile;
-  }
 }

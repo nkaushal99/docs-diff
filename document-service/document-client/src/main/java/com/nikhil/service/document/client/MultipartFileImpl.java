@@ -2,6 +2,9 @@ package com.nikhil.service.document.client;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,19 +14,14 @@ import java.io.InputStream;
 
 @JsonSerialize(using = MultipartFileSerializer.class)
 @JsonDeserialize(using = MultipartFileDeserializer.class)
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class MultipartFileImpl implements MultipartFile {
 
   private String name;
 
   private byte[] bytes;
-
-  public MultipartFileImpl() {
-  }
-
-  public MultipartFileImpl(String name, byte[] bytes) {
-    this.name = name;
-    this.bytes = bytes;
-  }
 
   @Override
   public String getName() {
@@ -61,14 +59,5 @@ public class MultipartFileImpl implements MultipartFile {
   }
 
   @Override
-  public void transferTo(File dest) throws IllegalStateException {
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public void setBytes(byte[] bytes) {
-    this.bytes = bytes;
-  }
+  public void transferTo(File dest) throws IllegalStateException {}
 }
