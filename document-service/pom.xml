@@ -11,11 +11,11 @@
 
   <packaging>pom</packaging>
 
-  <artifactId>diff-service</artifactId>
+  <artifactId>document-service</artifactId>
 
   <modules>
-    <module>diff-client</module>
-    <module>diff-server</module>
+    <module>document-client</module>
+    <module>document-server</module>
   </modules>
 
 </project>

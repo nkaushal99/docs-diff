@@ -46,7 +46,7 @@
   </build>
 
   <modules>
-    <module>compare-service</module>
+    <module>document-service</module>
     <module>diff-service</module>
     <module>discovery-service</module>
     <module>highlight-service</module>
