@@ -19,10 +19,10 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: compare-service
-          uri: lb://compare-service
+        - id: document-service
+          uri: lb://document-service
           predicates:
-            - Path=/compare/**
+            - Path=/v1/compare/**
 
         - id: diff-service
           uri: lb://diff-service
