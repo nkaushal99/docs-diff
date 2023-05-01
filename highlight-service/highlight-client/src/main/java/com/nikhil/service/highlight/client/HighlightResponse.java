@@ -1,10 +1,18 @@
 package com.nikhil.service.highlight.client;
 
 import com.nikhil.service.document.client.MultipartFileImpl;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class HighlightResponse implements Serializable {
 
   @Serial
@@ -14,26 +22,4 @@ public class HighlightResponse implements Serializable {
 
   private MultipartFileImpl newFileHighlighted;
 
-  public HighlightResponse(){}
-
-  public HighlightResponse(MultipartFileImpl oldFileHighlighted, MultipartFileImpl newFileHighlighted){
-    this.oldFileHighlighted = oldFileHighlighted;
-    this.newFileHighlighted = newFileHighlighted;
-  }
-
-  public MultipartFileImpl getOldFileHighlighted() {
-    return oldFileHighlighted;
-  }
-
-  public void setOldFileHighlighted(MultipartFileImpl oldFileHighlighted) {
-    this.oldFileHighlighted = oldFileHighlighted;
-  }
-
-  public MultipartFileImpl getNewFileHighlighted() {
-    return newFileHighlighted;
-  }
-
-  public void setNewFileHighlighted(MultipartFileImpl newFileHighlighted) {
-    this.newFileHighlighted = newFileHighlighted;
-  }
 }

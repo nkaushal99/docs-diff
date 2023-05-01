@@ -1,8 +1,13 @@
 package com.nikhil.service.diff.client;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 /**
  * Class representing one diff operation.
  */
+@NoArgsConstructor
+@AllArgsConstructor
 public class Diff {
   /**
    * One of: INSERT, DELETE or EQUAL.
@@ -12,22 +17,6 @@ public class Diff {
    * The text associated with this diff operation.
    */
   public String text;
-
-  /**
-   * Constructor. Initializes the diff with the provided values.
-   *
-   * @param operation One of INSERT, DELETE or EQUAL.
-   * @param text The text being applied.
-   */
-  public Diff(Operation operation, String text) {
-    // Construct a diff with the specified operation and text.
-    this.operation = operation;
-    this.text = text;
-  }
-
-  public Diff() {
-
-  }
 
   /**
    * Display a human-readable version of this Diff.
