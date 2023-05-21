@@ -1,6 +1,9 @@
 server.port: ${PORT:9010}
 
 spring:
+  kafka:
+    consumer:
+      group-id: diff-group
   application.name: diff-service
 
 eureka:

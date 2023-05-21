@@ -4,18 +4,10 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>com.nikhil</groupId>
-    <artifactId>diff-service</artifactId>
+    <artifactId>docs-diff</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
-  <artifactId>diff-client</artifactId>
-
-  <dependencies>
-    <dependency>
-      <groupId>com.nikhil</groupId>
-      <artifactId>shared-module</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-  </dependencies>
+  <artifactId>shared-module</artifactId>
 
 </project>

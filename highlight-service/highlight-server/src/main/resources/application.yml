@@ -1,6 +1,9 @@
 server.port: ${PORT:9020}
 
 spring:
+  kafka:
+    consumer:
+      group-id: highlight-group
   application.name: highlight-service
 
 eureka:

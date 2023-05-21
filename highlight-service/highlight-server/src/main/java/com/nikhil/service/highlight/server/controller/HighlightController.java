@@ -2,11 +2,19 @@ package com.nikhil.service.highlight.server.controller;
 
 import com.nikhil.service.diff.client.DiffList;
 import com.nikhil.service.diff.client.Operation;
+import com.nikhil.service.diff.client.event.DiffEvent;
 import com.nikhil.service.document.client.MultipartFileImpl;
 import com.nikhil.service.document.client.OldNewFiles;
+import com.nikhil.service.document.client.event.CompareEvent;
 import com.nikhil.service.highlight.client.HighlightRequest;
 import com.nikhil.service.highlight.client.HighlightResponse;
+import com.nikhil.service.highlight.client.event.HighlightEvent;
 import com.nikhil.service.highlight.server.util.TextHighlighter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,13 +22,64 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingDeque;
 
+@Slf4j
 @RestController
 public class HighlightController {
 
+  private static final String TOPIC = "highlight-topic";
+
+  private final Queue<CompareEvent> compareEventQueue = new LinkedBlockingDeque<>();
+
+  private final Queue<DiffEvent> diffEventQueue = new LinkedBlockingDeque<>();
+
+  @Autowired
+  private KafkaTemplate<String, HighlightEvent> kafkaTemplate;
+
+  @KafkaListener(topics = "compare-topic", groupId = "highlight-group")
+  public void consumeCompareEvent(ConsumerRecord<String, CompareEvent> record) {
+    CompareEvent compareEvent = record.value();
+    compareEventQueue.add(compareEvent);
+    combineEvents();
+  }
+
+  @KafkaListener(topics = "diff-topic", groupId = "highlight-group")
+  public void consumeDiffEvent(ConsumerRecord<String, DiffEvent> record) {
+    DiffEvent diffEvent = record.value();
+    diffEventQueue.add(diffEvent);
+    combineEvents();
+  }
+
+  private void combineEvents() {
+    if (!compareEventQueue.isEmpty() && !diffEventQueue.isEmpty()) {
+      // Combine the events from DocumentService and DiffService
+      // Access the compareEventList and diffEventList to retrieve the respective events
+      // Perform required logic with the combined events
+
+      CompareEvent compareEvent = compareEventQueue.remove();
+      DiffEvent diffEvent = diffEventQueue.remove();
+      if (!compareEvent.getRequestId().equals(diffEvent.getRequestId())) {
+        return;
+      }
+
+      OldNewFiles oldNewFiles = compareEvent.getOldNewFiles();
+      DiffList diffList = diffEvent.getDiffList();
+
+      // publish event
+      HighlightRequest highlightRequest = new HighlightRequest(oldNewFiles, diffList);
+      HighlightResponse highlightResponse;
+      highlightResponse = highlight(highlightRequest);
+      HighlightEvent highlightEvent = new HighlightEvent();
+      highlightEvent.setHighlightResponse(highlightResponse);
+      highlightEvent.setRequestId(compareEvent.getRequestId());
+      kafkaTemplate.send(TOPIC, highlightEvent);
+    }
+  }
+
   @PostMapping("/highlight")
-  public HighlightResponse highlight(@RequestBody HighlightRequest highlightRequest)
-    throws IOException {
+  public HighlightResponse highlight(@RequestBody HighlightRequest highlightRequest) {
     OldNewFiles oldNewFiles = highlightRequest.getOldNewFiles();
     DiffList diffList = highlightRequest.getDiffList();
     TextHighlighter oldTextHighlighter = null, newTextHighlighter = null;
@@ -40,12 +99,21 @@ public class HighlightController {
     }
     Path filePath = oldTextHighlighter.getHighlightedDocumentPath();
     String fileName = filePath.getFileName().toString();
-    byte[] bytes = Files.readAllBytes(filePath);
+    byte[] bytes;
+    try {
+      bytes = Files.readAllBytes(filePath);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
     MultipartFileImpl oldFile = new MultipartFileImpl(fileName, bytes);
 
     filePath = newTextHighlighter.getHighlightedDocumentPath();
     fileName = filePath.getFileName().toString();
-    bytes = Files.readAllBytes(filePath);
+    try {
+      bytes = Files.readAllBytes(filePath);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
     MultipartFileImpl newFile = new MultipartFileImpl(fileName, bytes);
     return new HighlightResponse(oldFile, newFile);
   }
