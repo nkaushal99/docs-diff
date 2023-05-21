@@ -1,6 +1,9 @@
 server.port: ${PORT:9000}
 
 spring:
+  kafka:
+    consumer:
+      group-id: document-group
   application.name: document-service
 
 eureka:

@@ -59,6 +59,7 @@
     <module>highlight-service</module>
     <module>gateway-service</module>
     <module>custom-spring-boot-starters</module>
+    <module>shared-module</module>
   </modules>
 
 </project>
