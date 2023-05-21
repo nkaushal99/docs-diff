@@ -4,7 +4,7 @@
 
 ---
 
-The Web app allows users to compare two documents at once, highlighting any textual differences between
+Based on the **Event-driven Microservices architecture**, this web-app allows users to compare two documents at once, highlighting any textual differences between
 the two.
 
 ![Docs Diff](documentation/diff.png)
@@ -15,19 +15,18 @@ the two.
 
 ## Services
 
-1. Discovery Service - The service registry.
-2. Gateway Service - API Gateway.
-3. Config Server - Centralize external config.
-4. Compare Service - Composite service to compare 2 documents.
-5. Diff Service - Extract differences between the texts.
-6. Highlight Service - Highlight the differences between the texts.
-
-> TODO: UI Service
+1. Service Discovery
+2. Gateway
+3. Document Service
+4. Diff Service - Extracts the differences between the texts.
+5. Highlight Service - Highlights the differences between the texts.
+6. Kafka - To promote event-driven architecture
 
 ## Requirements
 
 For building and running the application you need:
 
-- [JDK 1.8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+- [JDK 17](https://www.oracle.com/java/technologies/downloads/#java17)
 - [Maven 3](https://maven.apache.org)
+- [Docker](https://docs.docker.com/get-docker/)
 
