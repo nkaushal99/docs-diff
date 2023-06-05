@@ -7,6 +7,7 @@ import com.nikhil.service.diff.server.util.CompareText;
 import com.nikhil.service.diff.server.util.TextExtractor;
 import com.nikhil.service.document.client.OldNewFiles;
 import com.nikhil.service.document.client.event.CompareEvent;
+import com.nikhil.shared.util.MultipartUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -43,10 +45,14 @@ public class DiffController {
 
   @PostMapping("/diffs")
   public DiffList createDiffs(@RequestBody OldNewFiles oldNewFiles) {
-    String oldText = null, newText = null;
+    String oldText, newText;
     try {
-      oldText = new TextExtractor(oldNewFiles.getOldFile()).getText();
-      newText = new TextExtractor(oldNewFiles.getNewFile()).getText();
+      MultipartFile oldFile = MultipartUtils.reconstructMultipartFile(oldNewFiles.getOldFileName(),
+        oldNewFiles.getOldFileContentType(), oldNewFiles.getOldFileBytes());
+      MultipartFile newFile = MultipartUtils.reconstructMultipartFile(oldNewFiles.getNewFileName(),
+        oldNewFiles.getNewFileContentType(), oldNewFiles.getNewFileBytes());
+      oldText = new TextExtractor(oldFile).getText();
+      newText = new TextExtractor(newFile).getText();
     } catch (IOException e) {
       throw new RuntimeException(e);
     }

@@ -3,13 +3,14 @@ package com.nikhil.service.highlight.server.controller;
 import com.nikhil.service.diff.client.DiffList;
 import com.nikhil.service.diff.client.Operation;
 import com.nikhil.service.diff.client.event.DiffEvent;
-import com.nikhil.service.document.client.MultipartFileImpl;
 import com.nikhil.service.document.client.OldNewFiles;
 import com.nikhil.service.document.client.event.CompareEvent;
 import com.nikhil.service.highlight.client.HighlightRequest;
 import com.nikhil.service.highlight.client.HighlightResponse;
 import com.nikhil.service.highlight.client.event.HighlightEvent;
 import com.nikhil.service.highlight.server.util.TextHighlighter;
+import com.nikhil.shared.SharedConstants;
+import com.nikhil.shared.util.MultipartUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -84,10 +86,14 @@ public class HighlightController {
     DiffList diffList = highlightRequest.getDiffList();
     TextHighlighter oldTextHighlighter = null, newTextHighlighter = null;
 
+    MultipartFile oldFile = MultipartUtils.reconstructMultipartFile(oldNewFiles.getOldFileName(),
+      oldNewFiles.getOldFileContentType(), oldNewFiles.getOldFileBytes());
+    MultipartFile newFile = MultipartUtils.reconstructMultipartFile(oldNewFiles.getNewFileName(),
+      oldNewFiles.getNewFileContentType(), oldNewFiles.getNewFileBytes());
     try {
-      oldTextHighlighter = new TextHighlighter(oldNewFiles.getOldFile(), diffList,
+      oldTextHighlighter = new TextHighlighter(oldFile, diffList,
         Operation.DELETE, false);
-      newTextHighlighter = new TextHighlighter(oldNewFiles.getNewFile(), diffList,
+      newTextHighlighter = new TextHighlighter(newFile, diffList,
         Operation.INSERT, false);
     } catch (IOException e) {
       e.printStackTrace();
@@ -105,7 +111,8 @@ public class HighlightController {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    MultipartFileImpl oldFile = new MultipartFileImpl(fileName, bytes);
+    MultipartFile oldFileHltd = MultipartUtils.reconstructMultipartFile(fileName,
+      SharedConstants.CONTENT_TYPE_PDF, bytes);
 
     filePath = newTextHighlighter.getHighlightedDocumentPath();
     fileName = filePath.getFileName().toString();
@@ -114,7 +121,9 @@ public class HighlightController {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-    MultipartFileImpl newFile = new MultipartFileImpl(fileName, bytes);
-    return new HighlightResponse(oldFile, newFile);
+
+    MultipartFile newFileHltd = MultipartUtils.reconstructMultipartFile(fileName,
+      SharedConstants.CONTENT_TYPE_PDF, bytes);
+    return new HighlightResponse(oldFileHltd, newFileHltd);
   }
 }
