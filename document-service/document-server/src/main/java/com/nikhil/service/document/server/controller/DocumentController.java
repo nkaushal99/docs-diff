@@ -1,19 +1,20 @@
 package com.nikhil.service.document.server.controller;
 
-import com.nikhil.service.document.client.MultipartFileImpl;
 import com.nikhil.service.document.client.OldNewFiles;
 import com.nikhil.service.document.client.event.CompareEvent;
 import com.nikhil.service.highlight.client.HighlightResponse;
 import com.nikhil.service.highlight.client.event.HighlightEvent;
+import com.nikhil.shared.util.MultipartUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 import java.util.UUID;
@@ -35,7 +36,8 @@ public class DocumentController {
   private KafkaTemplate<String, CompareEvent> kafkaTemplate;
 
   @PostMapping("/compare")
-  public OldNewFiles compare(@RequestBody OldNewFiles oldNewFiles) throws InterruptedException {
+  public OldNewFiles compare(@ModelAttribute OldNewFiles oldNewFiles) throws InterruptedException {
+
     String requestId = UUID.randomUUID().toString(); // Generate a unique identifier for the request
 
     // Create a new latch for the current request and store it in the map
@@ -66,9 +68,13 @@ public class DocumentController {
   public void consumeHighlightEvent(ConsumerRecord<String, HighlightEvent> record) {
     HighlightEvent highlightEvent = record.value();
     HighlightResponse highlightResponse = highlightEvent.getHighlightResponse();
-    MultipartFileImpl oldFile = highlightResponse.getOldFileHighlighted();
-    MultipartFileImpl newFile = highlightResponse.getNewFileHighlighted();
-    OldNewFiles response = new OldNewFiles(oldFile, newFile);
+    MultipartFile oldFileHltd =
+      MultipartUtils.reconstructMultipartFile(highlightResponse.getOldFileHltdName(),
+        highlightResponse.getOldFileHltdContentType(), highlightResponse.getOldFileHltdBytes());
+    MultipartFile newFileHltd =
+      MultipartUtils.reconstructMultipartFile(highlightResponse.getNewFileHltdName(),
+        highlightResponse.getNewFileHltdContentType(), highlightResponse.getNewFileHltdBytes());
+    OldNewFiles response = new OldNewFiles(oldFileHltd, newFileHltd);
 
     String requestId = highlightEvent.getRequestId(); // Get the requestId from the event
 
