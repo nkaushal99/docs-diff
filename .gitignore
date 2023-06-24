@@ -1,6 +1,11 @@
 **/target
 **.iml
 
+### Web ###
+node_modules/
+.cache/
+dist/
+
 ### IntelliJ IDEA ###
 **/out/
 !**/src/main/**/out/
@@ -18,13 +23,6 @@
 bin/
 !**/src/main/**/bin/
 !**/src/test/**/bin/
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
 
 ### VS Code ###
 .vscode/
