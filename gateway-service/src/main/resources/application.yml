@@ -34,3 +34,9 @@ spring:
           predicates:
             - Path=/highlight/**
 
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods: "*"
+            allowedHeaders: "*"
