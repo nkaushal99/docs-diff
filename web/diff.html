@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./diff-styles.css">
+    <title>Docs Diff</title>
+</head>
+
+<body>
+
+    <header>
+        <h1>Docs Diff</h1>
+    </header>
+
+    <article id="container">
+        <section id="old">
+            <div class="version">
+                <h1>Old Version</h1>
+            </div>
+            <iframe class="responsive-iframe" id="oldFileHltd" src='data:application/pdf;base64,' hidden></iframe>
+        </section>
+
+        <section id="new">
+            <div class="version">
+                <h1>New Version</h1>
+            </div>
+            <iframe class="responsive-iframe" id="newFileHltd" src='data:application/pdf;base64,' hidden></iframe>
+        </section>
+    </article>
+
+    <script src="./show-diff.js"></script>
+
+</body>
+
+</html>
