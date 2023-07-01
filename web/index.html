@@ -1,40 +1,69 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <link rel="stylesheet" type="text/css" href="./styles.css">
-  <title>Docs Diff</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="./styles.css">
+    <title>Docs Diff</title>
 </head>
 
 <body>
-  <main>
 
     <header>
-      <h1>Docs Diff</h1>
+        <h1>Docs Diff</h1>
     </header>
 
-    <section id="form-section">
-      <form id="uploadForm" enctype="multipart/form-data">
-        <label for="oldFile">Old File</label>
-        <input type="file" name="oldFile" id="oldFile">
-        <label for="newFile">New File</label>
-        <input type="file" name="newFile" id="newFile">
-        <div id="button-container">
-          <input type="submit" value="Upload">
-        </div>
-      </form>
-    </section>
+    <main>
+        <article id="form-section">
+            <form id="upload-form" enctype="multipart/form-data">
+                <section id="choose-files">
+                    <section id="choose-old-file">
+                        <div class="container">
+                            <div class="version">
+                                <h1>Old Version</h1>
+                            </div>
+                            <div class="upload-container old">
+                                <div class="border-container drop-zone old">
+                                    <input type="file" id="old-file-upload" class="file-upload">
+                                    <p>Drag and drop file here</p>
+                                    <p>or</p>
+                                    <p><a href="#" id="old-file-browser" class="file-browser">browse</a> your computer.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
-    <section id="container">
-      <iframe class="responsive-iframe" id="oldFileHltd" src='data:application/pdf;base64,' hidden></iframe>
-      <iframe class="responsive-iframe" id="newFileHltd" src='data:application/pdf;base64,' hidden></iframe>
-    </section>
+                    <section id="compare-files">
+                        <button id="compare" type="submit">Compare</button>
+                    </section>
+
+                    <section id="choose-new-file">
+                        <div class="container">
+                            <div class="version">
+                                <h1>New Version</h1>
+                            </div>
+                            <div class="upload-container new">
+                                <div class="border-container drop-zone new">
+                                    <input type="file" id="new-file-upload" class="file-upload">
+                                    <p>Drag and drop file here</p>
+                                    <p>or</p>
+                                    <p><a href="#" id="new-file-browser" class="file-browser">browse</a> your computer.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+            </form>
+        </article>
+    </main>
 
     <footer>
     </footer>
 
-  </main>
-
-  <script src="./index.js"></script>
+    <script src="./index.js"></script>
 
 </body>
+
 </html>
