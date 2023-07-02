@@ -3,11 +3,12 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ---
+![Docs Diff](documentation/UI.png)
 
 Based on the **Event-driven Microservices architecture**, this web-app allows users to compare two documents at once, highlighting any textual differences between
 the two.
 
-![Docs Diff](documentation/diff.png)
+![Comparison](documentation/diff.png)
 
 ## Architecture
 
